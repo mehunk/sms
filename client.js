@@ -1,6 +1,3 @@
-///<reference path='typings/node/node.d.ts' />
-///<reference path='typings/bluebird/bluebird.d.ts' />
-///<reference path='typings/moment/moment.d.ts' />
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -11,6 +8,7 @@ require("./global");
 var Socket = require("./cmppSocket");
 var crypto = require('crypto');
 var events = require("events");
+var iconv = require('iconv-lite');
 var md5 = crypto.createHash('md5');
 var cmdCfg = require("./commandsConfig");
 var Client = (function (_super) {
@@ -85,7 +83,7 @@ var Client = (function (_super) {
         if (content.length > this.contentLimit) {
             return this.sendLongSms(body, content);
         }
-        var buf = new Buffer(content, "gbk");
+        var buf = iconv.encode(content, 'utf16'); //new Buffer(content, "utf16");
         body.Msg_Length = buf.length;
         body.Msg_Content = buf;
         return this.socket.send(cmdCfg.Commands.CMPP_SUBMIT, body);
@@ -125,14 +123,14 @@ var Client = (function (_super) {
             Registered_Delivery: 1,
             Msg_level: 1,
             Service_Id: this.config.serviceId,
-            Fee_UserType: 2,
+            Fee_UserType: 0, //原来是2
             Fee_terminal_Id: "",
-            Fee_terminal_type: 1,
+            Fee_terminal_type: 0, //原来是1
             TP_pId: 0,
             TP_udhi: 0,
-            Msg_Fmt: 15,
+            Msg_Fmt: 8, //原来是15
             Msg_src: this.spId,
-            FeeType: "03",
+            FeeType: "01", //原来是03
             FeeCode: this.config.feeCode,
             ValId_Time: "",
             At_Time: "",

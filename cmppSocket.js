@@ -7,14 +7,11 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-///<reference path='typings/node/node.d.ts' />
-///<reference path='typings/bluebird/bluebird.d.ts' />
-///<reference path='typings/lodash/lodash.d.ts' />
+
 var net = require("net");
 var events = require("events");
 var cmdCfg = require("./commandsConfig");
 var iconv = require("iconv-lite");
-iconv.extendNodeEncodings();
 var CMPPSocket = (function (_super) {
     __extends(CMPPSocket, _super);
     function CMPPSocket(config) {
@@ -62,9 +59,11 @@ var CMPPSocket = (function (_super) {
         var deferred = Promise.defer();
         this.socket = new net.Socket();
         this.socket.on("data", function (buffer) {
+            //console.log('Error Happens here...');
             _this.handleData(buffer);
         });
         this.socket.on("error", function (err) {
+            //console.log('Error Happens here...');
             _this.emit("error", err);
             deferred.reject(err);
             _this.destroySocket();
@@ -147,6 +146,7 @@ var CMPPSocket = (function (_super) {
                 if (header.Command_Id === cmdCfg.Commands.CMPP_CONNECT_RESP)
                     result = "status:" + (cmdCfg.Status[body.Status] || body.Status);
                 var msg = "command:" + cmdCfg.Commands[header.Command_Id] + " failed. result:" + result;
+                //console.log(`Error code is ${body.Status}`);
                 promise.reject(new Error(msg));
             }
             else {
@@ -256,7 +256,7 @@ var CMPPSocket = (function (_super) {
                 obj.Msg_Content = this.readBody("CMPP_DELIVER_REPORT_CONTENT", obj.Msg_Content);
             }
             else {
-                obj.Msg_Content = obj.Msg_Content.toString("gbk");
+                obj.Msg_Content = obj.Msg_Content.toString("utf16");
             }
         }
         return obj;

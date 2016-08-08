@@ -1,4 +1,3 @@
-///<reference path='typings/node/node.d.ts' />
 "use strict";
 var Client = require("./client");
 var client = new Client({});
@@ -12,10 +11,10 @@ client.on("error", function (err) {
     console.log("error", err);
 });
 client.on("terminated", function () {
-    client.connect("spid", "secret");
+    client.connect("150038", "150038");
 });
-client.connect("spid", "secret").then(function () {
-    client.sendGroup(["136xxxxxx", "137xxxxx"], "这是一条测试群发短信").catch(function (err) {
+client.connect("150038", "150038").then(function () {
+    client.sendGroup(["1064845140001"], "终于TMD测试好，55555").catch(function (err) {
         console.log(err);
     });
 }).catch(function (err) {

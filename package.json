@@ -15,7 +15,8 @@
   "devDependencies": {},
   "dependencies": {
     "bluebird": "^2.9.14",
-    "iconv-lite": "0.4.7",
+    "iconv": "^2.2.0",
+    "iconv-lite": "^0.4.7",
     "lodash": "^3.5.0",
     "moment": "^2.9.0"
   }
